@@ -27,11 +27,7 @@ const getbooks = path => {
       articles.push(article)
     })
     fs.writeFileSync(__dirname + '/data/recommendArticle.json', JSON.stringify(articles))
-
-    fs.readFile(__dirname+ '/data/recommendArticle.json', (err, data) => {
-      console.log(JSON.parse(data.toString()))
-    })
   })
 }
 
-getbooks(bookHomeUrl)
+// getbooks(bookHomeUrl)
