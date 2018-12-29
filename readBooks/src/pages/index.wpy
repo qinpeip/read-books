@@ -1,12 +1,32 @@
 <style lang="less">
   page {
+    background-color: rgba(225,225,225, .5);
     height: 100%;
+    .search-header {
+      padding: 20rpx 30rpx;
+      background-color: #d45454;
+      input {
+        height: 50rpx;
+        font-size: 18rpx;
+        background-color: #fff;
+        border-radius: 10rpx;
+        width: 100%;
+      }
+    }
+
     .recommend {
       width: 100%;
       display: flex;
       flex-wrap: wrap;
       padding: 0 30rpx;
       box-sizing: border-box;
+      background-color: #fff;
+      .article-title {
+        display: block;
+        text-align: left;
+        font-size: 25rpx;
+        width: 100%;
+      }
       >view {
         width: 33.3333%;
         display: flex;
@@ -14,9 +34,11 @@
         justify-content: center;
         align-items: center;
         margin: 20rpx 0;
-              image {
-          width: 140rpx;
+        /*background-color: #fff;*/
+        image {
+          width: 110rpx;
           height: 160rpx;
+          border-radius: 10rpx;
         }
         text {
           font-size: 16rpx;
@@ -27,11 +49,19 @@
 </style>
 <template>
   <view class="container">
-    <view class="recommend">
-      <view wx:for="{{articles}}" wx:key="{{item.articleUrl}}" >
-        <view><image src="{{item.imgUrl}}"></image></view>
-        <view><text>{{item.articleName}}</text></view>
-        <text>作者:   {{item.auth}}</text>
+    <view class="search-header flex-center">
+      <input type="text" placeholder="可搜书名和作者...">
+    </view>
+    <view>
+      <view class="recommend">
+        <view class="article-title">
+          热门书籍
+        </view>
+        <view wx:for="{{articles}}" wx:key="{{item.articleUrl}}" >
+          <view><image src="{{item.imgUrl}}"></image></view>
+          <view><text>{{item.articleName}}</text></view>
+          <text>作者:   {{item.auth}}</text>
+        </view>
       </view>
     </view>
     <toast />
@@ -45,8 +75,9 @@
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarBackgroundColor: 'red',
-      navigationBarTitleText: 'home'
+      navigationBarBackgroundColor: '#d45454',
+      navigationBarTitleText: 'read books',
+      navigationBarTextStyle: 'white'
     }
     components = {
       toast: Toast
