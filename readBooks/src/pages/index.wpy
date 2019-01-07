@@ -53,13 +53,13 @@
       <input type="text" placeholder="可搜书名和作者...">
     </view>
     <view>
-      <view class="recommend">
+      <view class="recommend" wx:for="{{allBooks}}" wx:key="{{index}}">
         <view class="article-title">
-          热门书籍
+          {{item[0].bookTypeTitle}}
         </view>
-        <view wx:for="{{articles}}" wx:key="{{item.articleUrl}}" >
+        <view wx:for="{{item}}" wx:key="{{item.bookUrl}}" >
           <view><image src="{{item.imgUrl}}"></image></view>
-          <view><text>{{item.articleName}}</text></view>
+          <view><text>{{item.bookName}}</text></view>
           <text>作者:   {{item.auth}}</text>
         </view>
       </view>
@@ -89,7 +89,8 @@
       userInfo: {
         nickName: '加载中...'
       },
-      articles: []
+      articles: [],
+      allBooks: []
     }
 
     computed = {
@@ -125,12 +126,25 @@
       })
     }
 
+    getAllBooks () {
+      wepy.request({
+        url: 'http://192.168.20.82:3000/getAllBooks',
+        success: (res) => {
+          const { data = [] } = res
+          console.log(data)
+          this.allBooks = data
+          this.$apply()
+        }
+      })
+    }
+
     events = {
     }
 
     onLoad() {
       let self = this
       this.getData()
+      this.getAllBooks()
       this.$parent.getUserInfo(function (userInfo) {
         if (userInfo) {
           self.userInfo = userInfo

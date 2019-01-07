@@ -5,10 +5,22 @@ const router = new Router();
 const fs = require('fs');
 const https = require('https')
 
+const AllBooks = require('../sql/allBooks/allBooks')
+
 const path = __dirname
 router.get('/', async (ctx, next) => {
   const data = fs.readFileSync( '../server/books/data/recommendArticle.json')
   ctx.body = data.toString()
+})
+
+
+router.get('/getAllBooks', async ctx => {
+  const allBooks = [];
+  for (let key in AllBooks) {
+    const data = await AllBooks[key].find({}, null, {limit: 9});
+    allBooks.push(data)
+  }
+  ctx.body = JSON.stringify(allBooks)
 })
 
 app.use(router.routes()).use(router.allowedMethods())
