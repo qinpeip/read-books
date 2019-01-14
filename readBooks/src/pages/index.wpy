@@ -57,7 +57,7 @@
         <view class="article-title">
           {{item[0].bookTypeTitle}}
         </view>
-        <view wx:for="{{item}}" wx:key="{{item.bookUrl}}" >
+        <view wx:for="{{item}}" wx:key="{{item.bookUrl}}" @tap="showDetail({{item}})">
           <view><image src="{{item.imgUrl}}"></image></view>
           <view><text>{{item.bookName}}</text></view>
           <text>作者:   {{item.auth}}</text>
@@ -97,6 +97,9 @@
     }
 
     methods = {
+      showDetail (book) {
+        wx.navigateTo({url: `detail?bookId=${book._id}`})
+      },
       toast () {
         let promise = this.$invoke('toast', 'show', {
           title: '自定义标题',
@@ -106,58 +109,19 @@
         promise.then((d) => {
           console.log('toast done')
         })
-      },
-      request () {
-        wepy.request({
-          url: 'https://www.madcoder.cn/tests/sleep.php?time=1&t=css&c=',
-          success: function (d) {}
-        })
       }
     }
-
-    getData () {
-      wepy.request({
-        url: 'http://192.168.20.82:3000/',
-        success: (res) => {
-          const { data } = res
-          this.articles = data
-          this.$apply()
-        }
-      })
-    }
-
-    getAllBooks () {
-      wepy.request({
-        url: 'http://192.168.20.82:3000/getAllBooks',
-        success: (res) => {
-          const { data = [] } = res
-          console.log(data)
-          this.allBooks = data
-          this.$apply()
-        }
-      })
+    async getAllBooks () {
+      const result = await this.$ajax.getData('getAllBooks')
+      this.allBooks = result
+      this.$apply()
     }
 
     events = {
     }
 
     onLoad() {
-      let self = this
-      this.getData()
       this.getAllBooks()
-      this.$parent.getUserInfo(function (userInfo) {
-        if (userInfo) {
-          self.userInfo = userInfo
-        }
-        self.normalTitle = '标题已被修改'
-        self.setTimeoutTitle = '标题三秒后会被修改'
-        setTimeout(() => {
-          self.setTimeoutTitle = '到三秒了'
-          self.$apply()
-        }, 3000)
-
-        self.$apply()
-      })
     }
   }
 </script>

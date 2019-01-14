@@ -1,0 +1,21 @@
+<style lang="less">
+
+</style>
+<template>
+  <view>
+    {{name}}
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Detail extends wepy.page {
+    data = {
+      name: '详情页面'
+    }
+    onLoad (data) {
+      const { bookId } = data
+      console.log(bookId)
+    }
+  }
+</script>

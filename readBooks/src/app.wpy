@@ -5,45 +5,47 @@
     align-items: center;
   }
 </style>
-
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/index'
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
-    }
-  }
-
-  globalData = {
-    userInfo: null
-  }
-
-  constructor () {
-    super()
-    this.use('requestfix')
-  }
-
-  onLaunch() {
-  }
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+  import http from './util/http'
+  wepy.page.prototype.$ajax = http
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/index',
+        'pages/detail'
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#fff',
+        navigationBarTitleText: 'WeChat',
+        navigationBarTextStyle: 'black'
       }
-    })
+    }
+
+    globalData = {
+      userInfo: null
+    }
+
+    constructor () {
+      super()
+      this.use('requestfix')
+    }
+
+    onLaunch() {
+    }
+    getUserInfo(cb) {
+      const that = this
+      if (this.globalData.userInfo) {
+        return this.globalData.userInfo
+      }
+      wepy.getUserInfo({
+        success (res) {
+          that.globalData.userInfo = res.userInfo
+          cb && cb(res.userInfo)
+        }
+      })
+    }
   }
-}
 </script>
