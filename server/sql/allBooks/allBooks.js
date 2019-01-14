@@ -8,7 +8,12 @@ const allBooksSchema = new mongoose.Schema({
   bookName: String,
   bookTypeTitle: String,
   bookTypeTitleId: String,
-  info: String
+  info: String,
+  newSection: {
+    bookDetailUrl: String,
+    bookDetailTitle: String
+  },
+  allBookSection: Array
 })
 
 const RecommendBooks = mongoose.model('recommend_books', allBooksSchema)

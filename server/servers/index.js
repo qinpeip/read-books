@@ -8,11 +8,6 @@ const https = require('https')
 const AllBooks = require('../sql/allBooks/allBooks')
 
 const path = __dirname
-router.get('/', async (ctx, next) => {
-  const data = fs.readFileSync( '../server/books/data/recommendArticle.json')
-  ctx.body = data.toString()
-})
-
 
 router.get('/getAllBooks', async ctx => {
   const allBooks = [];
@@ -21,6 +16,12 @@ router.get('/getAllBooks', async ctx => {
     allBooks.push(data)
   }
   ctx.body = JSON.stringify(allBooks)
+})
+
+router.get('/getBookDetail', async ctx => {
+  const { bookId, bookTypeTitleId } = ctx.query
+  const data = await AllBooks[`${bookTypeTitleId}Books`].findOne({_id: bookId})
+  ctx.body = data
 })
 
 app.use(router.routes()).use(router.allowedMethods())

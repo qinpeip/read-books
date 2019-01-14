@@ -1,21 +1,134 @@
 <style lang="less">
-
+.book-detail {
+  &-header {
+    &-book-name {
+      height: 300rpx;
+      background-color: rgba(143, 159, 167, 0.3);
+      padding: 20rpx;
+      image {
+        width: 200rpx;
+        height: 300rpx;
+        border-radius: 10rpx;
+      }
+      &>view {
+        color: #d45454;
+        padding-left: 50rpx;
+        justify-content: center;
+        .book-name {
+          margin-bottom: 30rpx;
+        }
+        .auth {
+          font-size: 23rpx;
+        }
+      }
+    }
+    &-button {
+      margin-top: 30rpx;
+      button {
+        padding: 0 50rpx;
+        color: #fff;
+        background-color: #d45454;
+      }
+      .no-bg {
+        background-color: transparent;
+        border: 1px solid #d45454;
+        color: #d45454;
+      }
+    }
+    &-info {
+      padding: 30rpx;
+      font-size: 24rpx;
+      text-indent: 2em;
+    }
+  }
+  .new-section {
+    background-color: rgba(143, 159, 167, 0.3);
+    padding: 20rpx 0 0;
+    font-size: 25rpx;
+    &-content {
+      background-color: #fff;
+      padding: 10rpx 20rpx;
+      &-title {
+        font-size: 30rpx;
+        color: #666;
+        margin-bottom: 40rpx;
+      }
+      .new {
+        display: inline-block;
+        background-color: #d45454;
+        margin-right: 10rpx;
+        color: #fff;
+        border-radius: 5rpx;
+      }
+      &-all {
+        margin-top: 20rpx;
+        border-top: 1px solid rgba(143, 159, 167, 0.3);
+        padding: 20rpx;
+        text-align: center;
+        color: rgba(143, 159, 167, 1);
+      }
+    }
+  }
+}
 </style>
 <template>
-  <view>
-    {{name}}
+  <view class="book-detail flex flex-column">
+    <view class="book-detail-header flex flex-column">
+      <view class="book-detail-header-book-name flex">
+        <image src="{{bookDetail.imgUrl}}"></image>
+        <view class="flex flex-column">
+          <view class="book-name">{{bookDetail.bookName}}</view>
+          <view class="auth">作者: {{bookDetail.auth}}</view>
+        </view>
+      </view>
+      <view class="book-detail-header-button flex">
+        <button @tap="startRead">开始阅读</button>
+        <button class="no-bg" @tap="showCatalogue">查看目录</button>
+      </view>
+      <view class="book-detail-header-info">
+        <text>{{bookDetail.info}}</text>
+      </view>
+    </view>
+    <view class="new-section">
+     <view class="new-section-content">
+       <view class="new-section-content-title">最新章节</view>
+       <view><view class="new">新</view>{{bookDetail.newSection.bookDetailTitle}}</view>
+       <view class="new-section-content-all" @tap="showCatalogue">
+         查看全部章节
+       </view>
+     </view>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
   export default class Detail extends wepy.page {
+    config = {
+      navigationBarBackgroundColor: '#d45454',
+      navigationBarTitleText: 'read books',
+      navigationBarTextStyle: 'white'
+    }
     data = {
-      name: '详情页面'
+      name: '详情页面',
+      bookDetail: {}
+    }
+    methods = {
+      startRead () {
+        console.log('开始阅读')
+      },
+      showCatalogue () {
+        console.log('查看目录')
+      }
+    }
+    async getBookDetail (query) {
+      const bookDetail = await this.$ajax.getData(`getBookDetail${this.$ajax.jointQuery(query)}`)
+      this.bookDetail = bookDetail
+      this.$apply()
+      console.log(this.bookDetail)
     }
     onLoad (data) {
-      const { bookId } = data
-      console.log(bookId)
+      this.getBookDetail(data)
     }
   }
 </script>

@@ -62,13 +62,47 @@ const getbooks = async path => {
               book.bookName = $(aItem.children[0]).attr('title')
               // 文章地址 : $(aItem).attr('href')
               // 图片地址$(aItem.children[0]).attr('src')
+              // 获取章节
+              superagent.get(book.bookUrl).charset().end((err, res) => {
+                if (err) {
+                  return
+                }
+                const $ = cheerio.load(res.text)
+                $('.lastrecord').each((index, newSectionItem) => {
+                  $(newSectionItem.children).each((index, strongItem) => {
+                    if (strongItem.name === 'strong') {
+                      $(strongItem.children).each(async (index, aItem) => {
+                        if (aItem.name === 'a') {
+                          let newSection = {
+                            bookDetailUrl: `http://www.mytxt.cc${$(aItem).attr('href')}`,
+                            bookDetailTitle: $(aItem).text()
+                          }
+                          await allBooks[`${book.bookTypeTitleId}Books`].findOneAndUpdate({bookName: book.bookName}, {$set: {newSection}}, {upsert: true, new: true})
+                          let allSectionUrl = newSection.bookDetailUrl.replace(/\/[0-9]*\.html/, '/')
+                          let allBookSection = []
+                          superagent.get(allSectionUrl).charset().end(async (err, res) => {
+                            if (err) return
+                            const $ = cheerio.load(res.text)
+                            $('.story_list_m62topxs>.cp_list_m62topxs>ol>li>a').each((index, item) => {
+                              allBookSection.push({
+                                bookDetailUrl: `http://www.mytxt.cc${$(item).attr('href')}`,
+                                bookDetailTitle: $(item).text()
+                              })
+                            })
+                            await allBooks[`${book.bookTypeTitleId}Books`].findOneAndUpdate({bookName: book.bookName}, {$set: {allBookSection}}, {upsert: true, new: true})
+                          })
+                        }
+                      })
+                    }
+                  })
+                })
+              })
             }
           })
           // console.log(item.children[3].children[1].children)
           $(item.children[3].children[1].children).each((index, item) => {
             if (item.name == 'span') {
               book.auth = $(item.children[1]).text()
-              // 文章作者 $(item.children[1]).text()
             }
           })
           book.info = $(item.children[3].children[3]).text()

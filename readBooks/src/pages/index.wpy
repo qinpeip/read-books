@@ -98,7 +98,7 @@
 
     methods = {
       showDetail (book) {
-        wx.navigateTo({url: `detail?bookId=${book._id}`})
+        wx.navigateTo({url: `detail?bookId=${book._id}&bookTypeTitleId=${book.bookTypeTitleId}`})
       },
       toast () {
         let promise = this.$invoke('toast', 'show', {
