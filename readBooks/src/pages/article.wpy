@@ -3,6 +3,8 @@
     background-color: rgb(233, 250, 255);
     margin-bottom: 150rpx;
     padding: 10rpx 40rpx;
+    font-size: 30rpx;
+    font-family: Verdana,Helvetica,Arial,sans-serif;
   }
   .footer-button {
     background-color: rgba(255,255,255, 0.8);
@@ -60,7 +62,9 @@
         }
         this.getArticle(query)
       },
-      showCatalogue () {}
+      showCatalogue () {
+        wx.navigateTo({url: `catalogue?&bookTypeTitleId=${this.articleDetail.bookTypeTitleId}&bookId=${this.articleDetail.bookId}`})
+      }
     }
 
     events = {
@@ -72,12 +76,13 @@
         scrollTop: 0,
         duration: 300
       })
+      wx.setNavigationBarTitle({
+        title: data.bookDetailTitle
+      })
       this.$apply()
     }
     onLoad(data) {
-      const { articleIndex } = data
       this.getArticle(data)
-      this.articleIndex = articleIndex
     }
   }
 </script>

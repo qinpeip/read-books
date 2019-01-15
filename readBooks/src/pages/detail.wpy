@@ -118,7 +118,7 @@
         wx.navigateTo({url: `article?articleIndex=0&bookTypeTitleId=${this.bookDetail.bookTypeTitleId}&bookId=${this.bookDetail._id}`})
       },
       showCatalogue () {
-        console.log('查看目录')
+        wx.navigateTo({url: `catalogue?&bookTypeTitleId=${this.bookDetail.bookTypeTitleId}&bookId=${this.bookDetail._id}`})
       },
       async showArticle () {
         wx.navigateTo({url: `article?articleIndex=${this.bookDetail.total - 1}&bookTypeTitleId=${this.bookDetail.bookTypeTitleId}&bookId=${this.bookDetail._id}`})
@@ -127,6 +127,9 @@
     async getBookDetail (query) {
       const bookDetail = await this.$ajax.getData(`getBookDetail${this.$ajax.jointQuery(query)}`)
       this.bookDetail = bookDetail
+      wx.setNavigationBarTitle({
+        title: bookDetail.bookName
+      })
       this.$apply()
       console.log(this.bookDetail)
     }

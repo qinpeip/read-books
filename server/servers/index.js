@@ -40,7 +40,15 @@ router.get('/getArticle', async ctx => {
   let { articleIndex, bookTypeTitleId, bookId } = ctx.query
   const data = await AllBooks[`${bookTypeTitleId}Books`].findOne({_id: bookId}).select({allBookSection: 1})
   const text = await getArticle(data.allBookSection[articleIndex].bookDetailUrl)
-  ctx.body = {text, total: data.allBookSection.length, articleIndex, bookTypeTitleId, bookId}
+  const bookDetailTitle = data.allBookSection[articleIndex].bookDetailTitle
+  ctx.body = {text, total: data.allBookSection.length, articleIndex, bookTypeTitleId, bookId, bookDetailTitle}
+})
+
+router.get('/getCatalogueList', async ctx => {
+  const { bookTypeTitleId, bookId } = ctx.query
+  var data = await AllBooks[`${bookTypeTitleId}Books`].findOne({_id: bookId})
+  data.total = data.allBookSection.length
+  ctx.body = data
 })
 
 app.use(router.routes()).use(router.allowedMethods())

@@ -21,7 +21,8 @@
       pages: [
         'pages/index',
         'pages/detail',
-        'pages/article'
+        'pages/article',
+        'pages/catalogue'
       ],
       window: {
         backgroundTextStyle: 'light',
