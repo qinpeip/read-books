@@ -6,17 +6,6 @@
     font-size: 30rpx;
     font-family: Verdana,Helvetica,Arial,sans-serif;
   }
-  .footer-button {
-    background-color: rgba(255,255,255, 0.8);
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    padding: 20rpx 0;
-    button {
-      font-size: 30rpx;
-      color: #d45454;
-    }
-  }
 </style>
 <template>
   <view>

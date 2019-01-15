@@ -131,7 +131,6 @@
         title: bookDetail.bookName
       })
       this.$apply()
-      console.log(this.bookDetail)
     }
     onLoad (data) {
       this.getBookDetail(data)

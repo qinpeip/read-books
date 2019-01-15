@@ -11,10 +11,14 @@
         padding: 20rpx 30rpx;
         font-size: 24rpx;
         color: rgba(143, 159, 167, 1);
+        justify-content: space-between;
+        .book-page {
+          color: #000;
+        }
       }
       .catalogue-list {
         background-color: #fff;
-        margin-top: 20rpx;
+        margin: 20rpx 0 160rpx;
         .catalogue-article {
           font-size: 26rpx;
           padding: 30rpx;
@@ -29,10 +33,16 @@
   <view class="catalogue">
     <view class="catalogue-title flex">
       <view class="book-name">{{bookDetail.bookName}}</view>
-      <view class="book-page">{{}}</view>
+      <view class="book-page">{{pageNum}}/{{count}}</view>
     </view>
     <view class="catalogue-list">
-      <view class="catalogue-article" wx:for="{{bookDetail.allBookSection}}" wx:key="{{item.bookDetailTitle}}" @tap="showArticle({{item}}, {{index}})">{{item.bookDetailTitle}}</view>
+      <view class="catalogue-article" wx:for="{{showBookSection}}" wx:key="{{item.bookDetailTitle}}" @tap="showArticle({{index}})">{{item.bookDetailTitle}}</view>
+    </view>
+    <view class="footer-button flex">
+      <button @tap="firstPage">首页</button>
+      <button @tap="prePage">上一页</button>
+      <button @tap="nextPage">下一页</button>
+      <button @tap="lastPage">尾页</button>
     </view>
   </view>
 </template>
@@ -46,18 +56,45 @@
       navigationBarTextStyle: 'white'
     }
     data = {
-      bookDetail: {}
+      bookDetail: {},
+      pageNum: 1,
+      limit: 20,
+      count: 0
     }
     methods = {
-      showArticle (data, index) {
-        wx.navigateTo({url: `article?articleIndex=${index}&bookTypeTitleId=${this.bookDetail.bookTypeTitleId}&bookId=${this.bookDetail._id}`})
+      showArticle (index) {
+        wx.navigateTo({url: `article?articleIndex=${(this.pageNum - 1) * 20 + index}&bookTypeTitleId=${this.bookDetail.bookTypeTitleId}&bookId=${this.bookDetail._id}`})
+      },
+      firstPage () {
+        this.pageNum = 1
+      },
+      prePage () {
+        if (this.pageNum === 1) return
+        this.pageNum--
+      },
+      nextPage () {
+        if (this.pageNum === this.count) return
+        this.pageNum++
+      },
+      lastPage () {
+        this.pageNum = this.count
+      }
+    }
+    computed = {
+      showBookSection () {
+        if (Array.isArray(this.bookDetail.allBookSection)) {
+          return this.bookDetail.allBookSection.slice((this.pageNum - 1) * this.limit, this.pageNum * this.limit)
+        } else {
+          return []
+        }
       }
     }
     async getBookDetail (query) {
       const data = await this.$ajax.getData(`getCatalogueList${this.$ajax.jointQuery(query)}`)
       this.bookDetail = data
+      const { allBookSection } = data
+      this.count = Math.ceil(allBookSection.length / this.limit)
       this.$apply()
-      console.log(data)
       wx.setNavigationBarTitle({
         title: '目录'
       })
