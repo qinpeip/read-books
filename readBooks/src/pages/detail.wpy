@@ -92,7 +92,7 @@
     <view class="new-section">
      <view class="new-section-content">
        <view class="new-section-content-title">最新章节</view>
-       <view><view class="new">新</view>{{bookDetail.newSection.bookDetailTitle}}</view>
+       <view @tap="showArticle"><view class="new">新</view>{{bookDetail.newSection.bookDetailTitle}}</view>
        <view class="new-section-content-all" @tap="showCatalogue">
          查看全部章节
        </view>
@@ -115,10 +115,13 @@
     }
     methods = {
       startRead () {
-        console.log('开始阅读')
+        wx.navigateTo({url: `article?articleIndex=0&bookTypeTitleId=${this.bookDetail.bookTypeTitleId}&bookId=${this.bookDetail._id}`})
       },
       showCatalogue () {
         console.log('查看目录')
+      },
+      async showArticle () {
+        wx.navigateTo({url: `article?articleIndex=${this.bookDetail.total - 1}&bookTypeTitleId=${this.bookDetail.bookTypeTitleId}&bookId=${this.bookDetail._id}`})
       }
     }
     async getBookDetail (query) {

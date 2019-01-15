@@ -27,6 +27,21 @@ const getbooks = async path => {
         bookTypeTitle: '热门书籍',
         bookTypeTitleId: 'Recommend'
       };
+      // 获取章节
+      let allBookSection = []
+      let newSection = {}
+      superagent.get(book.bookUrl).charset().end(async (err, res) => {
+        if (err) return
+        const $ = cheerio.load(res.text)
+        $('.story_list_m62topxs>.cp_list_m62topxs>ol>li>a').each((index, item) => {
+          allBookSection.push({
+            bookDetailUrl: `http://www.mytxt.cc${$(item).attr('href')}`,
+            bookDetailTitle: $(item).text()
+          })
+        })
+        newSection = allBookSection[allBookSection.length - 1]
+        await allBooks.RecommendBooks.findOneAndUpdate({bookName: book.bookName}, {$set: {allBookSection, newSection}}, {upsert: true, new: true})
+      })
       let findData = await allBooks.RecommendBooks.findOneAndUpdate({bookName: book.bookName}, {$set: book}, {upsert: true, new: true})
       if (findData) {
         // console.log('数据保存成功', findData)
@@ -116,5 +131,22 @@ const getbooks = async path => {
   })
 }
 
-getbooks(bookHomeUrl)
+// getbooks(bookHomeUrl)
 // console.log(allBooks.RecommendBooks)
+
+
+const getArticle = async url => {
+  const res = await new Promise((resolve, reject) => {
+    superagent.get(url).charset().end((err, res) => {
+      if (err) reject(err)
+      resolve(res)
+    })
+  })
+  const $ = cheerio.load(res.text)
+  return $('#content>p').eq(0).text()
+}
+
+
+module.exports = {
+  getArticle
+}

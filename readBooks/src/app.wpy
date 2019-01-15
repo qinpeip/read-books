@@ -20,7 +20,8 @@
     config = {
       pages: [
         'pages/index',
-        'pages/detail'
+        'pages/detail',
+        'pages/article'
       ],
       window: {
         backgroundTextStyle: 'light',

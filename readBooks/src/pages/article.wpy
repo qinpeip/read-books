@@ -1,0 +1,83 @@
+<style lang="less">
+  .text {
+    background-color: rgb(233, 250, 255);
+    margin-bottom: 150rpx;
+    padding: 10rpx 40rpx;
+  }
+  .footer-button {
+    background-color: rgba(255,255,255, 0.8);
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    padding: 20rpx 0;
+    button {
+      font-size: 30rpx;
+      color: #d45454;
+    }
+  }
+</style>
+<template>
+  <view>
+    <view class="text">{{articleDetail.text}}</view>
+    <view class="footer-button flex">
+      <button @tap="preArticle" disabled="{{articleDetail.articleIndex == 0}}">上一章</button>
+      <button @tap="showCatalogue">目录</button>
+      <button @tap="nextArticle" disabled="{{articleDetail.articleIndex == articleDetail.total - 1}}">下一章</button>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Article extends wepy.page {
+    config = {
+      navigationBarBackgroundColor: '#d45454',
+      navigationBarTitleText: 'read books',
+      navigationBarTextStyle: 'white'
+    }
+    data = {
+      articleDetail: {}
+    }
+
+    computed = {
+    }
+
+    methods = {
+      preArticle () {
+        const query = {
+          articleIndex: this.articleDetail.articleIndex - 1,
+          bookTypeTitleId: this.articleDetail.bookTypeTitleId,
+          bookId: this.articleDetail.bookId
+        }
+        this.getArticle(query)
+      },
+      nextArticle () {
+        const query = {
+          articleIndex: +this.articleDetail.articleIndex + 1,
+          bookTypeTitleId: this.articleDetail.bookTypeTitleId,
+          bookId: this.articleDetail.bookId
+        }
+        this.getArticle(query)
+      },
+      showCatalogue () {}
+    }
+
+    events = {
+    }
+    async getArticle (query) {
+      const data = await this.$ajax.getData(`getArticle${this.$ajax.jointQuery(query)}`)
+      this.articleDetail = data
+      wx.pageScrollTo({
+        scrollTop: 0,
+        duration: 300
+      })
+      this.$apply()
+    }
+    onLoad(data) {
+      const { articleIndex } = data
+      this.getArticle(data)
+      this.articleIndex = articleIndex
+    }
+  }
+</script>

@@ -13,6 +13,10 @@ export default {
     }, '?').replace(/&$/, '')
   },
   async getData(url, params = {}) {
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
     let result = await new Promise((resolve, reject) => {
       wepy.request({
         url: `${config.dev}${url}`,
@@ -21,6 +25,7 @@ export default {
         }
       })
     })
+    wx.hideLoading()
     return result
   }
 }
