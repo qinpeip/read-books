@@ -4,7 +4,7 @@
   "description": "read book",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "wepy build --watch",
+    "dev": "cross-env NODE_ENV=dev wepy build --watch",
     "build": "cross-env NODE_ENV=production wepy build --no-cache",
     "dev:web": "wepy build --output web",
     "clean": "find ./dist -maxdepth 1 -not -name 'project.config.json' -not -name 'dist' | xargs rm -rf",
@@ -35,9 +35,10 @@
     "eslint-plugin-html": "^2.0.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^2.0.1",
-    "wepy-eslint": "^1.5.3",
     "less": "^3.8.1",
     "wepy-compiler-babel": "^1.5.1",
-    "wepy-compiler-less": "^1.3.10"
+    "wepy-compiler-less": "^1.3.10",
+    "wepy-eslint": "^1.5.3",
+    "wepy-plugin-uglifyjs": "^1.3.7"
   }
 }

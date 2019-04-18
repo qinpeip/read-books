@@ -33,7 +33,8 @@
         'pages/index',
         'pages/detail',
         'pages/article',
-        'pages/catalogue'
+        'pages/catalogue',
+        'pages/searchDetail'
       ],
       window: {
         backgroundTextStyle: 'light',

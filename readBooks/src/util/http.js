@@ -2,7 +2,7 @@ import wepy from 'wepy'
 
 const config = {
   dev: 'http://192.168.20.82:3000/',
-  production: ''
+  production: 'https://www.qppml.com.cn/'
 }
 
 export default {

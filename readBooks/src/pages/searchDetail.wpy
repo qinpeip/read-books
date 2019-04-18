@@ -1,0 +1,73 @@
+<style lang="less">
+  .book-detail-header-book-name {
+    height: 250rpx;
+    /*background-color: rgba(143, 159, 167, 0.3);*/
+    padding: 20rpx;
+    margin: 20rpx;
+    image {
+      width: 200rpx;
+      height: 250rpx;
+      border-radius: 10rpx;
+    }
+    &>view {
+      color: #d45454;
+      padding-left: 50rpx;
+      justify-content: center;
+      .book-name {
+        margin-bottom: 30rpx;
+      }
+      .auth {
+        font-size: 23rpx;
+      }
+    }
+  }
+</style>
+<template>
+  <view wx:for="{{allBooks}}" wx:key="{{item._id}}">
+    <view class="book-detail-header-book-name flex" @tap="showDetail({{item}})">
+      <image src="{{item.imgUrl}}"></image>
+      <view class="flex flex-column">
+        <view class="book-name">{{item.bookName}}</view>
+        <view class="auth">作者: {{item.auth}}</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Article extends wepy.page {
+    config = {
+      navigationBarBackgroundColor: '#d45454',
+      navigationBarTitleText: 'read books',
+      navigationBarTextStyle: 'white'
+    }
+    data = {
+      allBooks: {}
+    }
+
+    computed = {
+    }
+
+    methods = {
+      showDetail (book) {
+        wx.navigateTo({url: `detail?bookId=${book._id}&bookTypeTitleId=${book.bookTypeTitleId}`})
+      }
+    }
+
+    events = {
+    }
+    async getSearchData (query) {
+      const data = await this.$ajax.getData(`getSearchData${this.$ajax.jointQuery(query)}`)
+      this.allBooks = data
+      this.$apply()
+    }
+    onLoad(data) {
+      this.getSearchData(data)
+      wx.setNavigationBarTitle({
+        title: '搜索结果'
+      })
+    }
+  }
+</script>

@@ -50,7 +50,7 @@
 <template>
   <view class="container">
     <view class="search-header flex-center">
-      <input type="text" placeholder="可搜书名和作者...">
+      <input type="text" placeholder="可搜书名和作者..." bindconfirm="confirmHandle">
     </view>
     <view>
       <view class="recommend" wx:for="{{allBooks}}" wx:key="{{index}}">
@@ -100,15 +100,9 @@
       showDetail (book) {
         wx.navigateTo({url: `detail?bookId=${book._id}&bookTypeTitleId=${book.bookTypeTitleId}`})
       },
-      toast () {
-        let promise = this.$invoke('toast', 'show', {
-          title: '自定义标题',
-          img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
-        })
-
-        promise.then((d) => {
-          console.log('toast done')
-        })
+      confirmHandle (data) {
+        let value = data.detail.value
+        wx.navigateTo({url: `searchDetail?keyWord=${value}`})
       }
     }
     async getAllBooks () {

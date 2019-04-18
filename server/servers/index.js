@@ -5,7 +5,6 @@ const router = new Router();
 const fs = require('fs');
 const https = require('https')
 const { getArticle } = require('../books/index')
-console.log(getArticle)
 
 const AllBooks = require('../sql/allBooks/allBooks')
 
@@ -39,7 +38,8 @@ router.get('/getBookDetail', async ctx => {
 router.get('/getArticle', async ctx => {
   let { articleIndex, bookTypeTitleId, bookId } = ctx.query
   const data = await AllBooks[`${bookTypeTitleId}Books`].findOne({_id: bookId}).select({allBookSection: 1})
-  const text = await getArticle(data.allBookSection[articleIndex].bookDetailUrl)
+  let text = await getArticle(data.allBookSection[articleIndex].bookDetailUrl)
+  text = text.replace(/\n+/g, '<br/>')
   const bookDetailTitle = data.allBookSection[articleIndex].bookDetailTitle
   ctx.body = {text, total: data.allBookSection.length, articleIndex, bookTypeTitleId, bookId, bookDetailTitle}
 })
@@ -51,13 +51,19 @@ router.get('/getCatalogueList', async ctx => {
   ctx.body = data
 })
 
+router.get('/getSearchData', async ctx => {
+  const { keyWord } = ctx.query
+  let regx = new RegExp(keyWord, 'i')
+  console.log(regx)
+  let allBooks = [];
+  for (let key in AllBooks) {
+    const data = await AllBooks[key].find({$or: [{auth: {$regex: regx}}, {bookName: {$regex: regx}}]}, null).select({allBookSection: 0});
+    allBooks.push(...data)
+  }
+  ctx.body = JSON.stringify(allBooks)
+})
+
 app.use(router.routes()).use(router.allowedMethods())
 
-
-// const options = {
-//   key: fs.readFileSync('../server/www.feisha.com.key'),
-//   cert: fs.readFileSync('../server/www.feisha.com_ssl.crt')
-// }
-// https.createServer(options, app.callback()).listen(80)
 app.listen(3000)
 console.log('the serve is run 3000')

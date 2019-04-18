@@ -131,7 +131,9 @@ const getbooks = async path => {
   })
 }
 
-// getbooks(bookHomeUrl)
+setInterval(() => {
+  getbooks(bookHomeUrl)
+}, 24*60*60*1000)
 // console.log(allBooks.RecommendBooks)
 
 

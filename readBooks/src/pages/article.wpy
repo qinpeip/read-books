@@ -9,7 +9,11 @@
 </style>
 <template>
   <view>
-    <view class="text">{{articleDetail.text}}</view>
+    <!--<view class="text">{{articleDetail.text}}</view>-->
+    <import src="../wxParse/wxParse.wxml">
+      <view class="text">
+        <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
+      </view>
     <view class="footer-button flex">
       <button @tap="preArticle" disabled="{{articleDetail.articleIndex == 0}}">上一章</button>
       <button @tap="showCatalogue">目录</button>
@@ -20,6 +24,7 @@
 
 <script>
   import wepy from 'wepy'
+  const WxParse = require('../wxParse/wxParse')
 
   export default class Article extends wepy.page {
     config = {
@@ -60,7 +65,9 @@
     }
     async getArticle (query) {
       const data = await this.$ajax.getData(`getArticle${this.$ajax.jointQuery(query)}`)
+      let article = data.text
       this.articleDetail = data
+      WxParse.wxParse('article', 'html', article, this)
       wx.pageScrollTo({
         scrollTop: 0,
         duration: 300
