@@ -30,7 +30,15 @@
 
 </style>
 <template>
-  <view class="catalogue">
+  <view wx:if="{{isShowHelloWorld}}">
+    <view class="container">
+      <view class="title">毛主席语录</view>
+      <view class="usermotto">
+        <text class="user-motto">{{motto}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="catalogue" wx:else>
     <view class="catalogue-title flex">
       <view class="book-name">{{bookDetail.bookName}}</view>
       <view class="book-page">{{pageNum}}/{{count}}</view>
@@ -59,7 +67,9 @@
       bookDetail: {},
       pageNum: 1,
       limit: 20,
-      count: 0
+      count: 0,
+      isShowHelloWorld: true,
+      motto: ''
     }
     methods = {
       showArticle (index) {
@@ -99,8 +109,15 @@
         title: '目录'
       })
     }
+    async getisShowHellowWorldData(query) {
+      const result = await this.$ajax.getData('isShowHelloWorld')
+      this.isShowHelloWorld = result
+      this.motto = this.$parent.globalData.motto
+      this.$apply()
+      !result && this.getBookDetail(query)
+    }
     onLoad (data) {
-      this.getBookDetail(data)
+      this.getisShowHellowWorldData(data)
     }
   }
 </script>

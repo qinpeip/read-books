@@ -18,6 +18,9 @@ router.get('/getAllBooks', async ctx => {
   }
   ctx.body = JSON.stringify(allBooks)
 })
+router.get('/isShowHelloWorld', async ctx => {
+  ctx.body = true
+})
 
 router.get('/getBookDetail', async ctx => {
   const { bookId, bookTypeTitleId } = ctx.query

@@ -72,7 +72,15 @@
 }
 </style>
 <template>
-  <view class="book-detail flex flex-column">
+  <view wx:if="{{isShowHelloWorld}}">
+    <view class="container">
+      <view class="title">毛主席语录</view>
+      <view class="usermotto">
+        <text class="user-motto">{{motto}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="book-detail flex flex-column" wx:else>
     <view class="book-detail-header flex flex-column">
       <view class="book-detail-header-book-name flex">
         <image src="{{bookDetail.imgUrl}}"></image>
@@ -111,7 +119,9 @@
     }
     data = {
       name: '详情页面',
-      bookDetail: {}
+      bookDetail: {},
+      isShowHelloWorld: true,
+      motto: ''
     }
     methods = {
       startRead () {
@@ -132,8 +142,15 @@
       })
       this.$apply()
     }
+    async getisShowHellowWorldData(query) {
+      const result = await this.$ajax.getData('isShowHelloWorld')
+      this.isShowHelloWorld = result
+      this.motto = this.$parent.globalData.motto
+      this.$apply()
+      !result && this.getBookDetail(query)
+    }
     onLoad (data) {
-      this.getBookDetail(data)
+      this.getisShowHellowWorldData(data)
     }
   }
 </script>

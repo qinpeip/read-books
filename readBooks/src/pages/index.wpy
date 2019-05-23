@@ -48,7 +48,15 @@
   }
 </style>
 <template>
-  <view class="container">
+  <view wx:if="{{isShowHelloWorld}}">
+    <view class="container">
+      <view class="title">毛主席语录</view>
+      <view class="usermotto">
+        <text class="user-motto">{{motto}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="book-container" wx:else>
     <view class="search-header flex-center">
       <input type="text" placeholder="可搜书名和作者..." bindconfirm="confirmHandle">
     </view>
@@ -72,7 +80,6 @@
   import wepy from 'wepy'
   import Toast from 'wepy-com-toast'
   import testMixin from '../mixins/test'
-
   export default class Index extends wepy.page {
     config = {
       navigationBarBackgroundColor: '#d45454',
@@ -89,33 +96,42 @@
       userInfo: {
         nickName: '加载中...'
       },
+      isShowHelloWorld: true,
       articles: [],
-      allBooks: []
+      allBooks: [],
+      motto: ''
     }
 
-    computed = {
-    }
+    computed = {}
 
     methods = {
-      showDetail (book) {
+      showDetail(book) {
         wx.navigateTo({url: `detail?bookId=${book._id}&bookTypeTitleId=${book.bookTypeTitleId}`})
       },
-      confirmHandle (data) {
+      confirmHandle(data) {
         let value = data.detail.value
         wx.navigateTo({url: `searchDetail?keyWord=${value}`})
       }
     }
-    async getAllBooks () {
+
+    async getAllBooks() {
       const result = await this.$ajax.getData('getAllBooks')
       this.allBooks = result
       this.$apply()
     }
 
-    events = {
+    async getisShowHellowWorldData() {
+      const result = await this.$ajax.getData('isShowHelloWorld')
+      this.isShowHelloWorld = result
+      this.$apply()
     }
+
+    events = {}
 
     onLoad() {
       this.getAllBooks()
+      this.getisShowHellowWorldData()
+      this.motto = this.$parent.globalData.motto
     }
   }
 </script>

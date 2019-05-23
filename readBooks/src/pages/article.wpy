@@ -8,7 +8,15 @@
   }
 </style>
 <template>
-  <view>
+  <view wx:if="{{isShowHelloWorld}}">
+    <view class="container">
+      <view class="title">毛主席语录</view>
+      <view class="usermotto">
+        <text class="user-motto">{{motto}}</text>
+      </view>
+    </view>
+  </view>
+  <view wx:else>
     <!--<view class="text">{{articleDetail.text}}</view>-->
     <import src="../wxParse/wxParse.wxml">
       <view class="text">
@@ -33,7 +41,9 @@
       navigationBarTextStyle: 'white'
     }
     data = {
-      articleDetail: {}
+      articleDetail: {},
+      isShowHelloWorld: true,
+      motto: ''
     }
 
     computed = {
@@ -77,8 +87,15 @@
       })
       this.$apply()
     }
+    async getisShowHellowWorldData(query) {
+      const result = await this.$ajax.getData('isShowHelloWorld')
+      this.isShowHelloWorld = result
+      this.motto = this.$parent.globalData.motto
+      this.$apply()
+      !result && this.getArticle(query)
+    }
     onLoad(data) {
-      this.getArticle(data)
+      this.getisShowHellowWorldData(data)
     }
   }
 </script>

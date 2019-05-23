@@ -19,7 +19,7 @@ export default {
     })
     let result = await new Promise((resolve, reject) => {
       wepy.request({
-        url: `${config.dev}${url}`,
+        url: `${config.production}${url}`,
         success: res => {
           resolve(res.data)
         }
